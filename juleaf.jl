@@ -268,7 +268,75 @@ HTTP.register!(router, "GET", "/output.pdf", req -> begin
     end
 end)
 
-println("🚀 Juleaf server starting on http://localhost:$PORT")
-println("📁 Templates: $TEMPLATES_DIR")
+# Workspace routes
+HTTP.register!(router, "GET", "/workspace", req -> begin
+    files = []
+    
+    # List output directory
+    if isdir(OUTPUT_DIR)
+        for f in readdir(OUTPUT_DIR)
+            path = joinpath(OUTPUT_DIR, f)
+            if isfile(path)
+                push!(files, Dict(
+                    "name" => f,
+                    "size" => filesize(path),
+                    "modified" => string(mtime(path))
+                ))
+            end
+        end
+    end
+    
+    # List templates directory
+    if isdir(TEMPLATES_DIR)
+        for f in readdir(TEMPLATES_DIR)
+            path = joinpath(TEMPLATES_DIR, f)
+            if isfile(path) && (endswith(f, ".jmd") || endswith(f, ".tex") || endswith(f, ".md"))
+                push!(files, Dict(
+                    "name" => f,
+                    "size" => filesize(path),
+                    "modified" => string(mtime(path))
+                ))
+            end
+        end
+    end
+    
+    json = "{\"files\":[" * join(["{\"name\":\"$(f["name"])\",\"size\":$(f["size"])}" for f in files], ",") * "]}"
+    HTTP.Response(200, ["Content-Type" => "application/json"], body=json)
+end)
+
+HTTP.register!(router, "GET", "/workspace/{filename}", req -> begin
+    filename = HTTP.getparams(req)["filename"]
+    
+    # Security: prevent path traversal
+    if occursin("..", filename) || occursin("/", filename)
+        return HTTP.Response(400, "Invalid filename")
+    end
+    
+    # Check output directory first
+    path = joinpath(OUTPUT_DIR, filename)
+    if !isfile(path)
+        path = joinpath(TEMPLATES_DIR, filename)
+    end
+    
+    if isfile(path)
+        content_type = if endswith(filename, ".pdf")
+            "application/pdf"
+        elseif endswith(filename, ".png")
+            "image/png"
+        elseif endswith(filename, ".jpg") || endswith(filename, ".jpeg")
+            "image/jpeg"
+        elseif endswith(filename, ".svg")
+            "image/svg+xml"
+        else
+            "text/plain"
+        end
+        HTTP.Response(200, ["Content-Type" => content_type], body=read(path))
+    else
+        HTTP.Response(404, "File not found")
+    end
+end)
+
+println("Juleaf server starting on http://localhost:$PORT")
+println("Templates: $TEMPLATES_DIR")
 
 HTTP.serve(router, "0.0.0.0", PORT)

@@ -19,53 +19,55 @@
             padding: 10px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
         .header h1 {
             font-size: 20px;
             font-weight: 600;
-            margin-right: auto;
+            margin-right: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .header h1 img {
-            height: 28px;
-            width: auto;
-        }
+        .header h1 img { height: 28px; width: auto; }
+        
+        .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.3); margin: 0 4px; }
         
         .btn {
             background: #3498db;
             color: white;
             border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
+            padding: 7px 12px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .btn:hover { background: #2980b9; transform: translateY(-1px); }
         .btn:disabled { background: #95a5a6; cursor: not-allowed; transform: none; }
         .btn.compile { background: #27ae60; }
         .btn.compile:hover { background: #219a52; }
+        .btn.secondary { background: #7f8c8d; }
+        .btn.secondary:hover { background: #6c7a7b; }
+        
+        .spacer { flex: 1; }
         
         .status {
-            font-size: 12px;
+            font-size: 11px;
             color: #ecf0f1;
             padding: 4px 10px;
             background: rgba(0,0,0,0.2);
             border-radius: 4px;
         }
         
-        .container {
-            display: flex;
-            height: calc(100vh - 48px);
-        }
-        
+        .container { display: flex; height: calc(100vh - 48px); }
         .container.panel-open { height: calc(100vh - 48px - 280px); }
         
         .editor-pane {
@@ -96,6 +98,20 @@
             align-items: center;
         }
         
+        .editor-header input {
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            color: #333;
+            font-weight: 500;
+            padding: 2px 6px;
+            border-radius: 3px;
+            width: 150px;
+        }
+        
+        .editor-header input:hover { background: rgba(0,0,0,0.05); }
+        .editor-header input:focus { background: white; outline: 1px solid #3498db; }
+        
         .editor {
             flex: 1;
             border: none;
@@ -121,13 +137,12 @@
             font-size: 12px;
             color: #555;
             border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .pdf-viewer {
-            flex: 1;
-            border: none;
-            background: #525659;
-        }
+        .pdf-viewer { flex: 1; border: none; background: #525659; }
         
         .console-panel {
             position: fixed;
@@ -161,7 +176,6 @@
             cursor: pointer;
             font-size: 18px;
             padding: 0 8px;
-            transition: color 0.2s;
         }
         
         .console-close:hover { color: #fff; }
@@ -198,21 +212,187 @@
         body.dark-theme .editor { background: #252526; color: #d4d4d4; }
         body.dark-theme .editor-header,
         body.dark-theme .preview-header { background: #2d2d2d; color: #ccc; border-bottom-color: #444; }
+        body.dark-theme .editor-header input { color: #ccc; }
+        body.dark-theme .editor-header input:focus { background: #333; }
         body.dark-theme .preview-pane { background: #1e1e1e; }
         body.dark-theme .resizer { background: #444; }
         
         select.btn {
             appearance: none;
-            padding-right: 24px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            padding-right: 22px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 8px center;
+            background-position: right 6px center;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal-overlay.visible { display: flex; }
+        
+        .modal {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            min-width: 400px;
+            max-width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        body.dark-theme .modal { background: #2d2d2d; color: #eee; }
+        
+        .modal h2 { margin-bottom: 16px; font-size: 18px; }
+        
+        .modal-files {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        
+        body.dark-theme .modal-files { border-color: #444; }
+        
+        .modal-file {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        body.dark-theme .modal-file { border-bottom-color: #444; }
+        .modal-file:hover { background: #f5f5f5; }
+        body.dark-theme .modal-file:hover { background: #383838; }
+        .modal-file:last-child { border-bottom: none; }
+        .modal-file-name { font-weight: 500; }
+        .modal-file-date { font-size: 11px; color: #888; }
+        .modal-file-delete { color: #c0392b; cursor: pointer; padding: 4px 8px; border-radius: 3px; }
+        .modal-file-delete:hover { background: rgba(192,57,43,0.1); }
+        .modal-buttons { display: flex; gap: 8px; justify-content: flex-end; }
+        
+        .unsaved-dot {
+            width: 8px; height: 8px;
+            background: #e74c3c;
+            border-radius: 50%;
+            margin-left: 6px;
+        }
+        
+        .hidden { display: none !important; }
+        
+        .workspace-panel {
+            width: 220px;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            display: none;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        
+        .workspace-panel.visible { display: flex; }
+        
+        body.dark-theme .workspace-panel { background: #252526; border-right-color: #444; }
+        
+        .workspace-header {
+            padding: 10px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #666;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        body.dark-theme .workspace-header { color: #999; border-bottom-color: #444; }
+        
+        .workspace-header button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .workspace-header button:hover { background: rgba(0,0,0,0.1); }
+        body.dark-theme .workspace-header button { color: #999; }
+        body.dark-theme .workspace-header button:hover { background: rgba(255,255,255,0.1); }
+        
+        .workspace-files {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        
+        .workspace-file {
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+        }
+        
+        body.dark-theme .workspace-file { color: #ccc; }
+        
+        .workspace-file:hover { background: rgba(0,0,0,0.05); }
+        body.dark-theme .workspace-file:hover { background: rgba(255,255,255,0.05); }
+        
+        .workspace-file.active { background: #e3f2fd; }
+        body.dark-theme .workspace-file.active { background: #1e3a5f; }
+        
+        .workspace-file-icon { font-size: 14px; }
+        
+        .workspace-file-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .workspace-file-size {
+            font-size: 10px;
+            color: #999;
+        }
+        
+        .workspace-empty {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .workspace-section {
+            padding: 8px 12px 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #999;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1><img src="/logo" alt="Juleaf">Juleaf</h1>
+        <div class="divider"></div>
+        <button class="btn secondary" onclick="toggleWorkspace()" title="Workspace">📁</button>
+        <button class="btn secondary" onclick="newFile()" title="Ctrl+N">📄 New</button>
+        <button class="btn secondary" onclick="openFiles()" title="Ctrl+O">📂 Open</button>
+        <button class="btn secondary" onclick="saveFile()" title="Ctrl+S">💾 Save</button>
+        <button class="btn secondary" onclick="downloadSource()">⬇ Export</button>
+        <div class="divider"></div>
         <select class="btn" id="templateSelect" onchange="loadTemplate()">
             <option value="">📄 Templates</option>
             <option value="article">Article / Report</option>
@@ -221,36 +401,71 @@
             <option value="letter">Letter</option>
             <option value="mathpaper">Math Paper</option>
         </select>
-        <button class="btn compile" onclick="compile()">▶ Compile</button>
-        <button class="btn" onclick="toggleConsole()">Console</button>
-        <button class="btn" onclick="toggleSettings()">⚙ Packages</button>
-        <button class="btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <div class="divider"></div>
+        <button class="btn compile" onclick="compile()" title="Ctrl+Enter">▶ Compile</button>
+        <button class="btn" style="background:#9b59b6" onclick="aiAssist()" title="AI Help (Ctrl+I)">✨ AI</button>
+        <span class="spacer"></span>
+        <button class="btn secondary" onclick="toggleConsole()">Console</button>
+        <button class="btn secondary" onclick="toggleSettings()">⚙</button>
+        <button class="btn secondary" onclick="setApiKey()" title="Set API Key">🔑</button>
+        <button class="btn secondary" onclick="toggleTheme()" id="themeBtn">🌙</button>
         <span class="status" id="status">Ready</span>
     </div>
     
     <div class="container">
+        <div class="workspace-panel" id="workspacePanel">
+            <div class="workspace-header">
+                <span>Workspace</span>
+                <button onclick="refreshWorkspace()" title="Refresh">🔄</button>
+            </div>
+            <div class="workspace-files" id="workspaceFiles">
+                <div class="workspace-empty">Loading...</div>
+            </div>
+        </div>
         <div class="editor-pane">
             <div class="editor-header">
-                <span id="editorHeader">document.jmd</span>
-                <span style="color:#888">Ctrl+S to compile</span>
+                <div style="display:flex;align-items:center;">
+                    <input type="text" id="fileName" value="tutorial.jmd" />
+                    <div class="unsaved-dot hidden" id="unsavedDot" title="Unsaved changes"></div>
+                </div>
+                <span style="color:#888;font-size:11px;">Ctrl+S save • Ctrl+Enter compile</span>
             </div>
             <textarea class="editor" id="editor" spellcheck="false">---
-title: "Welcome to Juleaf"
-author: "Your Name"
+title: "Juleaf Quick Start"
+author: "Tutorial"
 date: today
 ---
 
-# Getting Started
+![Juleaf Logo](juleaf_logo.png){ width=120px }
 
-**Juleaf** = Julia + Weave + LaTeX — write scientific documents with executable code!
+# Welcome to Juleaf
 
-## Features
+**Juleaf** combines Julia + Weave + LaTeX for scientific documents with live code execution.
 
-- **Julia code execution** with inline results
-- **LaTeX math**: $E = mc^2$ and display equations
-- **Live PDF preview**
+---
 
-## Example: Julia Code
+## Keyboard Shortcuts
+
+| Action | Shortcut |
+|--------|----------|
+| Save | Ctrl+S |
+| Compile | Ctrl+Enter |
+| New File | Ctrl+N |
+| Open Files | Ctrl+O |
+
+---
+
+## Writing Math
+
+Inline: $E = mc^2$ or display mode:
+
+$$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$$
+
+---
+
+## Julia Code Blocks
+
+Use triple backticks with `julia`:
 
 ```julia
 using Statistics
@@ -259,66 +474,219 @@ println("Mean: ", round(mean(x), digits=3))
 println("Std:  ", round(std(x), digits=3))
 ```
 
-## Math Example
+---
 
-The quadratic formula:
-$$
-x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
-$$
+## Plotting
+
+```julia
+using CairoMakie
+fig = Figure(size=(500, 250))
+ax = Axis(fig[1,1], xlabel="x", ylabel="sin(x)")
+x = range(0, 4π, 100)
+lines!(ax, x, sin.(x), linewidth=2)
+fig
+```
 
 ---
 
-Select a **template** from the dropdown to get started with IEEE papers, Beamer presentations, and more!
+## Templates
+
+Click **Templates** dropdown for:
+
+- **Article** — reports, papers
+- **IEEE** — conference format
+- **Beamer** — presentations
+- **Letter** — formal letters
+- **Math Paper** — theorems, proofs
+
+---
+
+## Tips
+
+1. Auto-compile triggers 1.5s after typing
+2. Use **⚙ Packages** to add LaTeX packages
+3. Check **Console** for errors
+4. Files save to browser storage
+
+---
+
+*Select a template or start writing!*
 </textarea>
         </div>
-        
         <div class="resizer" id="resizer"></div>
-        
         <div class="preview-pane" id="previewPane">
-            <div class="preview-header">Preview (PDF)</div>
+            <div class="preview-header">
+                <span>Preview (PDF)</span>
+                <button class="btn secondary" onclick="downloadPDF()" style="padding:4px 10px;font-size:11px;">⬇ PDF</button>
+            </div>
             <iframe class="pdf-viewer" id="preview"></iframe>
         </div>
     </div>
     
     <div class="console-panel" id="console">
         <div class="console-header">
-            <span>📋 Compilation Console</span>
+            <span>📋 Console</span>
             <button class="console-close" onclick="toggleConsole()">×</button>
         </div>
-        <div class="console-content" id="console-output">Waiting for compilation...</div>
+        <div class="console-content" id="console-output">Waiting...</div>
     </div>
     
     <div class="console-panel" id="settings">
         <div class="console-header">
-            <span>⚙ LaTeX Packages (header-includes)</span>
+            <span>⚙ LaTeX Packages</span>
             <button class="console-close" onclick="toggleSettings()">×</button>
         </div>
         <div class="console-content">
-            <textarea id="custom-packages" class="settings-textarea" placeholder="Add LaTeX packages here, e.g.:
-\usepackage{algorithm}
-\usepackage{booktabs}
-
-These will be injected into header-includes."></textarea>
+            <textarea id="custom-packages" class="settings-textarea" placeholder="Add packages here..."></textarea>
         </div>
     </div>
+    
+    <div class="modal-overlay" id="openModal">
+        <div class="modal">
+            <h2>📂 Your Documents</h2>
+            <div class="modal-files" id="filesList"></div>
+            <div class="modal-buttons">
+                <button class="btn secondary" onclick="uploadFile()">📤 Upload</button>
+                <button class="btn secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <input type="file" id="fileInput" accept=".jmd,.tex,.md" style="display:none" onchange="handleUpload(event)">
     
     <script>
         const editor = document.getElementById('editor');
         const preview = document.getElementById('preview');
         const status = document.getElementById('status');
-        const resizer = document.getElementById('resizer');
-        const editorPane = document.querySelector('.editor-pane');
-        const previewPane = document.getElementById('previewPane');
-        const editorHeader = document.getElementById('editorHeader');
+        const fileNameInput = document.getElementById('fileName');
+        const unsavedDot = document.getElementById('unsavedDot');
         
-        let compiling = false;
-        let autoCompileTimeout = null;
-        let isFirstCompile = true;
-        let isResizing = false;
-        let currentFileType = 'jmd';
+        let compiling = false, autoCompileTimeout = null, isResizing = false;
+        let hasUnsavedChanges = false, currentFileId = null, lastSavedContent = '';
+        
+        const STORAGE_KEY = 'juleaf_files';
+        const getFiles = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        const saveFiles = files => localStorage.setItem(STORAGE_KEY, JSON.stringify(files));
+        const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+        
+        function markUnsaved() {
+            if (editor.value !== lastSavedContent) {
+                hasUnsavedChanges = true;
+                unsavedDot.classList.remove('hidden');
+            }
+        }
+        
+        function markSaved() {
+            hasUnsavedChanges = false;
+            lastSavedContent = editor.value;
+            unsavedDot.classList.add('hidden');
+        }
+        
+        function newFile() {
+            if (hasUnsavedChanges && !confirm('Discard unsaved changes?')) return;
+            currentFileId = null;
+            fileNameInput.value = 'untitled.jmd';
+            editor.value = '---\ntitle: "Untitled"\nauthor: "Your Name"\ndate: today\n---\n\n# Introduction\n\nStart writing here...\n\n```julia\n# Your Julia code\nprintln("Hello!")\n```\n';
+            markSaved();
+            compile();
+        }
+        
+        function saveFile() {
+            const files = getFiles();
+            if (!currentFileId) currentFileId = generateId();
+            files[currentFileId] = {
+                name: fileNameInput.value || 'untitled.jmd',
+                content: editor.value,
+                packages: document.getElementById('custom-packages').value,
+                updatedAt: new Date().toISOString()
+            };
+            saveFiles(files);
+            markSaved();
+            status.textContent = '✓ Saved';
+            setTimeout(() => status.textContent = 'Ready', 2000);
+        }
+        
+        function openFiles() {
+            const files = getFiles();
+            const entries = Object.entries(files).sort((a, b) => new Date(b[1].updatedAt) - new Date(a[1].updatedAt));
+            const list = document.getElementById('filesList');
+            
+            if (entries.length === 0) {
+                list.innerHTML = '<div style="padding:20px;color:#888;text-align:center;">No saved documents</div>';
+            } else {
+                list.innerHTML = entries.map(([id, f]) => `
+                    <div class="modal-file" onclick="loadFile('${id}')">
+                        <div>
+                            <div class="modal-file-name">${f.name}</div>
+                            <div class="modal-file-date">${new Date(f.updatedAt).toLocaleString()}</div>
+                        </div>
+                        <span class="modal-file-delete" onclick="event.stopPropagation();deleteFile('${id}')">🗑</span>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('openModal').classList.add('visible');
+        }
+        
+        function loadFile(id) {
+            if (hasUnsavedChanges && !confirm('Discard unsaved changes?')) return;
+            const file = getFiles()[id];
+            if (file) {
+                currentFileId = id;
+                fileNameInput.value = file.name;
+                editor.value = file.content;
+                document.getElementById('custom-packages').value = file.packages || '';
+                markSaved();
+                closeModal();
+                compile();
+            }
+        }
+        
+        function deleteFile(id) {
+            if (!confirm('Delete permanently?')) return;
+            const files = getFiles();
+            delete files[id];
+            saveFiles(files);
+            if (currentFileId === id) currentFileId = null;
+            openFiles();
+        }
+        
+        function closeModal() { document.getElementById('openModal').classList.remove('visible'); }
+        function uploadFile() { document.getElementById('fileInput').click(); }
+        
+        function handleUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (hasUnsavedChanges && !confirm('Discard unsaved changes?')) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                currentFileId = null;
+                fileNameInput.value = file.name;
+                editor.value = ev.target.result;
+                markSaved();
+                closeModal();
+                compile();
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        }
+        
+        function downloadSource() {
+            const blob = new Blob([editor.value], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = fileNameInput.value || 'document.jmd';
+            a.click();
+        }
+        
+        function downloadPDF() {
+            const a = document.createElement('a');
+            a.href = '/output.pdf';
+            a.download = (fileNameInput.value || 'document').replace(/\.[^.]+$/, '') + '.pdf';
+            a.click();
+        }
         
         const templates = {
-            article: {
+            article: { 
                 code: `---
 title: "Article Title"
 author: "Author Name"
@@ -327,59 +695,32 @@ date: today
 
 # Introduction
 
-Your introduction here.
-
-## Background
-
-Background information with citations and references.
-
-# Methods
-
-## Data Collection
-
-Describe your methodology.
+Your text here.
 
 \`\`\`julia
 using Statistics
 data = randn(1000)
-println("Sample size: ", length(data))
 println("Mean: ", round(mean(data), digits=4))
 \`\`\`
-
-## Analysis
-
-Mathematical formulation:
-$$
-\\mathcal{L}(\\theta) = \\sum_{i=1}^n \\log p(x_i | \\theta)
-$$
 
 # Results
 
 \`\`\`julia
 using CairoMakie
 fig = Figure(size=(500, 300))
-ax = Axis(fig[1,1], xlabel="Value", ylabel="Frequency")
+ax = Axis(fig[1,1])
 hist!(ax, data, bins=30)
 fig
-\`\`\`
-
-# Conclusion
-
-Summary of findings.
-
-# References`,
-                packages: `\\usepackage{booktabs}
-\\usepackage{hyperref}`,
-                filetype: 'jmd'
+\`\`\``, 
+                packages: '' 
             },
-            
-            ieee: {
+            ieee: { 
                 code: `---
 documentclass: IEEEtran
 classoption: conference
 ---
 
-\\title{Your Paper Title Here}
+\\title{Your Paper Title}
 
 \\author{
 \\IEEEauthorblockN{First Author}
@@ -398,7 +739,7 @@ email@example.com}
 \\maketitle
 
 \\begin{abstract}
-Your abstract here. Keep it concise (150-250 words).
+Your abstract text here (150-250 words).
 \\end{abstract}
 
 \\begin{IEEEkeywords}
@@ -408,23 +749,17 @@ keyword1, keyword2, keyword3
 \\section{Introduction}
 Introduction text here.
 
-\\section{Related Work}
-Literature review.
-
 \\section{Methodology}
 
-\\subsection{Problem Formulation}
 The optimization problem:
 $$
 \\min_{\\mathbf{x}} f(\\mathbf{x}) = \\|\\mathbf{Ax} - \\mathbf{b}\\|_2^2
 $$
 
-\\subsection{Implementation}
-
 \`\`\`julia
 using LinearAlgebra
-A = randn(100, 10)
-b = randn(100)
+A = randn(50, 5)
+b = randn(50)
 x = A \\ b
 println("Solution norm: ", round(norm(x), digits=4))
 \`\`\`
@@ -433,10 +768,9 @@ println("Solution norm: ", round(norm(x), digits=4))
 
 \`\`\`julia
 using CairoMakie
-residual = A * x - b
-fig = Figure(size=(500, 300))
+fig = Figure(size=(400, 250))
 ax = Axis(fig[1,1], xlabel="Index", ylabel="Residual")
-scatter!(ax, 1:length(residual), residual, markersize=4)
+scatter!(ax, 1:length(A*x-b), A*x-b, markersize=4)
 fig
 \`\`\`
 
@@ -444,20 +778,14 @@ fig
 Conclusions and future work.
 
 \\begin{thebibliography}{00}
-\\bibitem{b1} A. Author, "Paper Title," Journal Name, vol. 1, pp. 1-10, 2024.
-\\end{thebibliography}`,
-                packages: `\\usepackage{cite}
-\\usepackage{amsmath,amssymb}
-\\usepackage{graphicx}
-\\usepackage{xcolor}`,
-                filetype: 'jmd'
+\\bibitem{b1} A. Author, "Paper Title," Journal, vol. 1, pp. 1-10, 2024.
+\\end{thebibliography}`, 
+                packages: '\\usepackage{cite}\n\\usepackage{amsmath,amssymb}\n\\usepackage{graphicx}' 
             },
-            
-            beamer: {
+            beamer: { 
                 code: `---
-title: "Presentation Title"
+title: "Presentation"
 author: "Your Name"
-institute: "Your Institution"
 date: today
 documentclass: beamer
 theme: Madrid
@@ -468,77 +796,28 @@ colortheme: whale
 
 ## Welcome
 
-This is a **Beamer presentation** created with Juleaf!
-
 Features:
 
-- Julia code execution
-- LaTeX math support  
-- Automatic PDF generation
-
-## Outline
-
-1. Introduction
-2. Methods
-3. Results
-4. Conclusion
-
-# Methods
-
-## Mathematical Framework
-
-The key equation:
-
-$$
-\\nabla f(x) = \\sum_{i=1}^n \\frac{\\partial f}{\\partial x_i} \\mathbf{e}_i
-$$
-
-## Algorithm
-
-1. Initialize parameters
-2. Compute gradient
-3. Update weights
-4. Repeat until convergence
+- Julia code
+- LaTeX math
+- PDF output
 
 # Results
 
-## Numerical Example
+## Code Example
 
 \`\`\`julia
 using Statistics
-x = randn(1000)
-println("Mean: ", round(mean(x), digits=4))
-println("Std:  ", round(std(x), digits=4))
+x = randn(100)
+println("Mean: ", round(mean(x), digits=3))
 \`\`\`
 
-## Visualization
+## Thank You
 
-\`\`\`julia
-using CairoMakie
-fig = Figure(size=(450, 280))
-ax = Axis(fig[1,1], xlabel="x", ylabel="Density")
-hist!(ax, x, bins=25, normalization=:pdf)
-fig
-\`\`\`
-
-# Conclusion
-
-## Summary
-
-- Point 1
-- Point 2
-- Point 3
-
-## Thank You!
-
-Questions?
-
-**Contact:** your.email@example.com`,
-                packages: ``,
-                filetype: 'jmd'
+Questions?`, 
+                packages: '' 
             },
-            
-            letter: {
+            letter: { 
                 code: `---
 documentclass: letter
 ---
@@ -555,20 +834,16 @@ documentclass: letter
 
 \\opening{Dear Sir or Madam,}
 
-I am writing to inquire about...
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Your message here.
 
 \\closing{Sincerely,}
 
 \\end{letter}
 
-\\end{document}`,
-                packages: ``,
-                filetype: 'jmd'
+\\end{document}`, 
+                packages: '' 
             },
-            
-            mathpaper: {
+            mathpaper: { 
                 code: `---
 title: "Mathematical Analysis"
 author: "Author Name"
@@ -577,87 +852,67 @@ header-includes:
   - \\usepackage{amsthm}
   - \\newtheorem{theorem}{Theorem}
   - \\newtheorem{lemma}{Lemma}
-  - \\newtheorem{definition}{Definition}
 ---
 
 # Introduction
 
-This document demonstrates mathematical typesetting with Julia computations.
-
-# Preliminaries
-
-\\begin{definition}
-A function $f: \\mathbb{R} \\to \\mathbb{R}$ is \\textbf{continuous} at $x_0$ if:
-$$
-\\lim_{x \\to x_0} f(x) = f(x_0)
-$$
-\\end{definition}
-
-# Main Results
+Mathematical typesetting with Julia.
 
 \\begin{theorem}
 Let $f$ be continuous on $[a,b]$. Then $f$ is integrable on $[a,b]$.
 \\end{theorem}
 
-\\begin{lemma}
-For any $\\epsilon > 0$, there exists $\\delta > 0$ such that...
-\\end{lemma}
-
 ## Numerical Verification
 
 \`\`\`julia
 using QuadGK
-
 f(x) = exp(-x^2)
-result, err = quadgk(f, -Inf, Inf)
+result, _ = quadgk(f, -Inf, Inf)
 println("∫ exp(-x²) dx = ", round(result, digits=6))
 println("√π = ", round(sqrt(π), digits=6))
-\`\`\`
-
-# Conclusion
-
-The numerical results confirm the theoretical predictions.`,
-                packages: `\\usepackage{amsmath,amssymb}
-\\usepackage{mathtools}`,
-                filetype: 'jmd'
+\`\`\``, 
+                packages: '\\usepackage{amsmath,amssymb}' 
             }
         };
         
         function loadTemplate() {
-            const select = document.getElementById('templateSelect');
-            const key = select.value;
-            
+            const key = document.getElementById('templateSelect').value;
             if (key && templates[key]) {
-                if (confirm('Load template? This replaces current content.')) {
-                    editor.value = templates[key].code;
-                    document.getElementById('custom-packages').value = templates[key].packages;
-                    localStorage.setItem('latex-packages', templates[key].packages);
-                    currentFileType = templates[key].filetype;
-                    editorHeader.textContent = `document.${currentFileType}`;
-                    compile();
+                if (hasUnsavedChanges && !confirm('Discard changes?')) {
+                    document.getElementById('templateSelect').value = '';
+                    return;
                 }
-                select.value = '';
+                currentFileId = null;
+                fileNameInput.value = key + '.jmd';
+                editor.value = templates[key].code;
+                document.getElementById('custom-packages').value = templates[key].packages;
+                markSaved();
+                compile();
             }
+            document.getElementById('templateSelect').value = '';
         }
         
         // Resizer
-        resizer.addEventListener('mousedown', (e) => {
+        const resizer = document.getElementById('resizer');
+        const editorPane = document.querySelector('.editor-pane');
+        const previewPane = document.getElementById('previewPane');
+        
+        resizer.addEventListener('mousedown', e => {
             isResizing = true;
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
             e.preventDefault();
         });
-
-        document.addEventListener('mousemove', (e) => {
+        
+        document.addEventListener('mousemove', e => {
             if (!isResizing) return;
-            const containerWidth = document.querySelector('.container').offsetWidth;
-            const percent = (e.clientX / containerWidth) * 100;
-            if (percent > 20 && percent < 80) {
-                editorPane.style.flex = `0 0 ${percent}%`;
-                previewPane.style.flex = `0 0 ${100 - percent}%`;
+            const pct = (e.clientX / document.querySelector('.container').offsetWidth) * 100;
+            if (pct > 20 && pct < 80) {
+                editorPane.style.flex = `0 0 ${pct}%`;
+                previewPane.style.flex = `0 0 ${100 - pct}%`;
             }
         });
-
+        
         document.addEventListener('mouseup', () => {
             if (isResizing) {
                 isResizing = false;
@@ -668,36 +923,46 @@ The numerical results confirm the theoretical predictions.`,
         
         async function compile() {
             if (compiling) return;
-            
             compiling = true;
             status.textContent = '⏳ Compiling...';
             
             try {
-                const content = editor.value;
-                const packages = document.getElementById('custom-packages').value;
+                const headers = {
+                    'Content-Type': 'text/plain',
+                    'X-LaTeX-Packages': btoa(unescape(encodeURIComponent(document.getElementById('custom-packages').value)))
+                };
+                
+                // Add API key if set
+                const apiKey = localStorage.getItem('apiKey');
+                if (apiKey) {
+                    headers['X-API-Key'] = apiKey;
+                }
                 
                 const response = await fetch('/compile', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain',
-                        'X-LaTeX-Packages': btoa(unescape(encodeURIComponent(packages))),
-                        'X-File-Type': currentFileType
-                    },
-                    body: content
+                    headers: headers,
+                    body: editor.value
                 });
                 
-                const logsHeader = response.headers.get('X-Compilation-Logs');
-                if (logsHeader) {
-                    try {
-                        const logs = decodeURIComponent(escape(atob(logsHeader)));
-                        displayLogs(logs);
-                    } catch { displayLogs(atob(logsHeader)); }
+                if (response.status === 401) {
+                    const key = prompt('API Key required:');
+                    if (key) {
+                        localStorage.setItem('apiKey', key);
+                        compiling = false;
+                        return compile();
+                    }
+                    status.textContent = '🔒 Unauthorized';
+                    return;
+                }
+                
+                const logs = response.headers.get('X-Compilation-Logs');
+                if (logs) {
+                    try { displayLogs(decodeURIComponent(escape(atob(logs)))); }
+                    catch { displayLogs(atob(logs)); }
                 }
                 
                 if (response.ok) {
-                    const timestamp = Date.now();
-                    preview.src = '/output.pdf?t=' + timestamp;
-                    isFirstCompile = false;
+                    preview.src = '/output.pdf?t=' + Date.now();
                     status.textContent = '✓ Compiled';
                     setTimeout(() => status.textContent = 'Ready', 2000);
                 } else {
@@ -705,42 +970,48 @@ The numerical results confirm the theoretical predictions.`,
                     document.getElementById('console').classList.add('visible');
                     document.querySelector('.container').classList.add('panel-open');
                 }
-            } catch (error) {
+            } catch (e) {
                 status.textContent = '✗ Error';
-                console.error(error);
             } finally {
                 compiling = false;
             }
         }
         
         editor.addEventListener('input', () => {
+            markUnsaved();
             clearTimeout(autoCompileTimeout);
             autoCompileTimeout = setTimeout(compile, 1500);
         });
         
-        document.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-                e.preventDefault();
-                compile();
+        document.addEventListener('keydown', e => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveFile(); compile(); }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); compile(); }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); newFile(); }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'o') { e.preventDefault(); openFiles(); }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'i') { e.preventDefault(); aiAssist(); }
+            if (e.key === 'Escape') {
+                closeModal();
+                const aiModal = document.getElementById('aiModal');
+                if (aiModal) aiModal.classList.remove('visible');
             }
         });
         
+        window.addEventListener('beforeunload', e => {
+            if (hasUnsavedChanges) { e.preventDefault(); e.returnValue = ''; }
+        });
+        
         function toggleConsole() {
-            const consolePanel = document.getElementById('console');
-            const settingsPanel = document.getElementById('settings');
-            const container = document.querySelector('.container');
-            settingsPanel.classList.remove('visible');
-            consolePanel.classList.toggle('visible');
-            container.classList.toggle('panel-open', consolePanel.classList.contains('visible'));
+            document.getElementById('settings').classList.remove('visible');
+            document.getElementById('console').classList.toggle('visible');
+            document.querySelector('.container').classList.toggle('panel-open', 
+                document.getElementById('console').classList.contains('visible'));
         }
         
         function toggleSettings() {
-            const consolePanel = document.getElementById('console');
-            const settingsPanel = document.getElementById('settings');
-            const container = document.querySelector('.container');
-            consolePanel.classList.remove('visible');
-            settingsPanel.classList.toggle('visible');
-            container.classList.toggle('panel-open', settingsPanel.classList.contains('visible'));
+            document.getElementById('console').classList.remove('visible');
+            document.getElementById('settings').classList.toggle('visible');
+            document.querySelector('.container').classList.toggle('panel-open',
+                document.getElementById('settings').classList.contains('visible'));
         }
         
         function toggleTheme() {
@@ -750,25 +1021,310 @@ The numerical results confirm the theoretical predictions.`,
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
         
+        function setApiKey() {
+            const current = localStorage.getItem('apiKey') || '';
+            const key = prompt('Enter API Key (leave empty to clear):', current);
+            if (key !== null) {
+                if (key) {
+                    localStorage.setItem('apiKey', key);
+                    status.textContent = '🔑 Key saved';
+                } else {
+                    localStorage.removeItem('apiKey');
+                    status.textContent = '🔑 Key cleared';
+                }
+                setTimeout(() => status.textContent = 'Ready', 2000);
+            }
+        }
+        
+        // AI Assist
+        async function aiAssist() {
+            const aiKey = localStorage.getItem('aiApiKey');
+            const aiProvider = localStorage.getItem('aiProvider') || 'groq';
+            
+            if (!aiKey) {
+                showAiSettings();
+                return;
+            }
+            
+            const selected = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+            const context = selected || editor.value;
+            
+            const action = prompt('What do you need?\n\n1. fix - Fix errors in code\n2. explain - Explain code\n3. improve - Suggest improvements\n4. generate - Generate code\n\nOr type your own request:', 'fix');
+            
+            if (!action) return;
+            
+            status.textContent = '✨ AI thinking...';
+            
+            const prompts = {
+                fix: `Fix any errors in this code and explain what was wrong:\n\n${context}`,
+                explain: `Explain this code clearly and concisely:\n\n${context}`,
+                improve: `Suggest improvements for this code:\n\n${context}`,
+                generate: `Generate Julia code for: ${context}`
+            };
+            
+            const userPrompt = prompts[action] || `${action}\n\nCode:\n${context}`;
+            
+            try {
+                let response;
+                
+                if (aiProvider === 'groq') {
+                    response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${aiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'llama-3.3-70b-versatile',
+                            messages: [
+                                { role: 'system', content: 'You are an expert Julia and LaTeX programmer. Be concise. Return code in ```julia or ```latex blocks.' },
+                                { role: 'user', content: userPrompt }
+                            ],
+                            max_tokens: 2048
+                        })
+                    });
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.error.message);
+                    showAiResponse(data.choices[0].message.content);
+                    
+                } else if (aiProvider === 'claude') {
+                    response = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-api-key': aiKey,
+                            'anthropic-version': '2023-06-01'
+                        },
+                        body: JSON.stringify({
+                            model: 'claude-sonnet-4-20250514',
+                            max_tokens: 2048,
+                            system: 'You are an expert Julia and LaTeX programmer. Be concise. Return code in ```julia or ```latex blocks.',
+                            messages: [{ role: 'user', content: userPrompt }]
+                        })
+                    });
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.error.message);
+                    showAiResponse(data.content[0].text);
+                }
+                
+                status.textContent = '✓ AI response ready';
+                setTimeout(() => status.textContent = 'Ready', 2000);
+                
+            } catch (e) {
+                status.textContent = '✗ AI error';
+                alert('AI Error: ' + e.message);
+            }
+        }
+        
+        function showAiSettings() {
+            const provider = prompt('AI Provider:\n1. groq (FREE - recommended)\n2. claude (paid)\n\nEnter 1 or 2:', '1');
+            if (!provider) return;
+            
+            const providerName = provider === '2' ? 'claude' : 'groq';
+            localStorage.setItem('aiProvider', providerName);
+            
+            const keyUrl = providerName === 'groq' 
+                ? 'Get free key at: console.groq.com/keys'
+                : 'Get key at: console.anthropic.com';
+            
+            const key = prompt(`${keyUrl}\n\nEnter your ${providerName.toUpperCase()} API key:`);
+            if (key) {
+                localStorage.setItem('aiApiKey', key);
+                status.textContent = '✨ AI configured';
+                setTimeout(() => status.textContent = 'Ready', 2000);
+            }
+        }
+        
+        function showAiResponse(text) {
+            // Create modal for AI response
+            let modal = document.getElementById('aiModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'aiModal';
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal" style="max-width:700px;max-height:80vh;display:flex;flex-direction:column;">
+                        <h2 style="display:flex;justify-content:space-between;align-items:center;">
+                            ✨ AI Response
+                            <button class="btn secondary" onclick="document.getElementById('aiModal').classList.remove('visible')" style="padding:4px 10px;">✕</button>
+                        </h2>
+                        <pre id="aiContent" style="flex:1;overflow:auto;background:#1e1e1e;color:#d4d4d4;padding:16px;border-radius:4px;font-size:12px;white-space:pre-wrap;margin:16px 0;"></pre>
+                        <div class="modal-buttons">
+                            <button class="btn secondary" onclick="copyAiCode()">📋 Copy Code</button>
+                            <button class="btn" onclick="insertAiCode()">⬇ Insert to juleaf</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            document.getElementById('aiContent').textContent = text;
+            modal.classList.add('visible');
+        }
+        
+        function copyAiCode() {
+            const text = document.getElementById('aiContent').textContent;
+            const codeMatch = text.match(/```(?:julia|latex)?\n([\s\S]*?)```/);
+            const code = codeMatch ? codeMatch[1] : text;
+            navigator.clipboard.writeText(code);
+            status.textContent = '📋 Copied!';
+            setTimeout(() => status.textContent = 'Ready', 1500);
+        }
+        
+        function insertAiCode() {
+            const text = document.getElementById('aiContent').textContent;
+            const codeMatch = text.match(/```(?:julia|latex)?\n([\s\S]*?)```/);
+            const code = codeMatch ? codeMatch[1] : text;
+            
+            const pos = editor.selectionStart;
+            editor.value = editor.value.slice(0, pos) + code + editor.value.slice(pos);
+            editor.selectionStart = editor.selectionEnd = pos + code.length;
+            editor.focus();
+            
+            document.getElementById('aiModal').classList.remove('visible');
+            markUnsaved();
+        }
+        
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-theme');
             document.getElementById('themeBtn').textContent = '☀️';
         }
         
         function displayLogs(logs) {
-            const consoleOutput = document.getElementById('console-output');
-            let formatted = logs
+            document.getElementById('console-output').innerHTML = logs
                 .replace(/Error:/g, '<span class="error">Error:</span>')
                 .replace(/✓/g, '<span class="success">✓</span>')
                 .replace(/✗/g, '<span class="error">✗</span>');
-            consoleOutput.innerHTML = formatted;
         }
         
-        const packagesTextarea = document.getElementById('custom-packages');
-        packagesTextarea.value = localStorage.getItem('latex-packages') || '';
-        packagesTextarea.addEventListener('input', (e) => {
+        document.getElementById('custom-packages').value = localStorage.getItem('latex-packages') || '';
+        document.getElementById('custom-packages').addEventListener('input', e => {
             localStorage.setItem('latex-packages', e.target.value);
         });
+        
+        lastSavedContent = editor.value;
+        
+        // Workspace functions
+        function toggleWorkspace() {
+            document.getElementById('workspacePanel').classList.toggle('visible');
+            if (document.getElementById('workspacePanel').classList.contains('visible')) {
+                refreshWorkspace();
+            }
+        }
+        
+        async function refreshWorkspace() {
+            const container = document.getElementById('workspaceFiles');
+            container.innerHTML = '<div class="workspace-empty">Loading...</div>';
+            
+            try {
+                const response = await fetch('/workspace');
+                if (response.ok) {
+                    const data = await response.json();
+                    renderWorkspace(data);
+                } else {
+                    container.innerHTML = '<div class="workspace-empty">Could not load workspace</div>';
+                }
+            } catch (e) {
+                container.innerHTML = '<div class="workspace-empty">Error loading workspace</div>';
+            }
+        }
+        
+        function renderWorkspace(data) {
+            const container = document.getElementById('workspaceFiles');
+            
+            if (!data.files || data.files.length === 0) {
+                container.innerHTML = '<div class="workspace-empty">No files yet</div>';
+                return;
+            }
+            
+            // Group files by type
+            const groups = {
+                documents: [],
+                outputs: [],
+                other: []
+            };
+            
+            data.files.forEach(f => {
+                if (f.name.endsWith('.jmd') || f.name.endsWith('.md') || f.name.endsWith('.tex')) {
+                    groups.documents.push(f);
+                } else if (f.name.endsWith('.pdf') || f.name.endsWith('.png') || f.name.endsWith('.svg')) {
+                    groups.outputs.push(f);
+                } else {
+                    groups.other.push(f);
+                }
+            });
+            
+            let html = '';
+            
+            if (groups.documents.length > 0) {
+                html += '<div class="workspace-section">Documents</div>';
+                groups.documents.forEach(f => {
+                    html += renderFileItem(f, '📄');
+                });
+            }
+            
+            if (groups.outputs.length > 0) {
+                html += '<div class="workspace-section">Outputs</div>';
+                groups.outputs.forEach(f => {
+                    const icon = f.name.endsWith('.pdf') ? '📕' : '🖼️';
+                    html += renderFileItem(f, icon);
+                });
+            }
+            
+            if (groups.other.length > 0) {
+                html += '<div class="workspace-section">Other</div>';
+                groups.other.forEach(f => {
+                    html += renderFileItem(f, '📎');
+                });
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function renderFileItem(file, icon) {
+            const size = formatFileSize(file.size);
+            return `
+                <div class="workspace-file" onclick="openWorkspaceFile('${file.name}')" title="${file.name}">
+                    <span class="workspace-file-icon">${icon}</span>
+                    <span class="workspace-file-name">${file.name}</span>
+                    <span class="workspace-file-size">${size}</span>
+                </div>
+            `;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+        
+        async function openWorkspaceFile(filename) {
+            if (filename.endsWith('.pdf')) {
+                window.open('/workspace/' + encodeURIComponent(filename), '_blank');
+                return;
+            }
+            
+            if (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg')) {
+                window.open('/workspace/' + encodeURIComponent(filename), '_blank');
+                return;
+            }
+            
+            // Text files - load into editor
+            if (hasUnsavedChanges && !confirm('Discard unsaved changes?')) return;
+            
+            try {
+                const response = await fetch('/workspace/' + encodeURIComponent(filename));
+                if (response.ok) {
+                    const text = await response.text();
+                    currentFileId = null;
+                    fileNameInput.value = filename;
+                    editor.value = text;
+                    markSaved();
+                    compile();
+                }
+            } catch (e) {
+                alert('Could not open file');
+            }
+        }
         
         window.addEventListener('load', compile);
     </script>

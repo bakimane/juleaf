@@ -1,4 +1,33 @@
-ENV["PATH"] = ENV["PATH"] * ":" * homedir() * "/Library/TinyTeX/bin/universal-darwin"
+# Cross-platform PATH setup
+if Sys.iswindows()
+    # Windows: Add TinyTeX and Pandoc paths
+    tinytex_path = joinpath(ENV["APPDATA"], "TinyTeX", "bin", "windows")
+    pandoc_paths = [
+        joinpath(get(ENV, "LOCALAPPDATA", ""), "Pandoc"),
+        "C:\\Program Files\\Pandoc",
+    ]
+    
+    if isdir(tinytex_path)
+        ENV["PATH"] = ENV["PATH"] * ";" * tinytex_path
+    end
+    for p in pandoc_paths
+        if isdir(p)
+            ENV["PATH"] = ENV["PATH"] * ";" * p
+        end
+    end
+else
+    # macOS/Linux
+    tinytex_path = joinpath(homedir(), "Library", "TinyTeX", "bin", "universal-darwin")
+    if isdir(tinytex_path)
+        ENV["PATH"] = ENV["PATH"] * ":" * tinytex_path
+    end
+    
+    # Linux TinyTeX location
+    linux_tinytex = joinpath(homedir(), ".TinyTeX", "bin", "x86_64-linux")
+    if isdir(linux_tinytex)
+        ENV["PATH"] = ENV["PATH"] * ":" * linux_tinytex
+    end
+end
 
 using HTTP
 using Weave

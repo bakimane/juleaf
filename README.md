@@ -16,12 +16,11 @@
 
 - 📝 Julia code execution in documents
 - 📐 LaTeX math rendering
-- 📄 PDF output (IEEE, Beamer, Article, Letter)
-- ✨ AI assist (Groq/Claude)
+- 📄 PDF output (Research paper, Presentation slide, Letters)
+- ✨ AI assistant compatible (Groq, Claude, etc.)
 - 🌙 Dark mode
 
 ## 2. Install
-
 ### 2.1. Julia
 
 **macOS**
@@ -35,7 +34,12 @@ curl -fsSL https://install.julialang.org | sh
 ```
 
 **Windows**  
-Download from [julialang.org/downloads](https://julialang.org/downloads/)
+Follow the instructions provided by [julialang.org](https://julialang.org/downloads/)
+
+to confirm that Julia is installed, open a terminal and run the following line: 
+```bash
+julia --version
+```
 
 ### 2.2. TinyTeX (LaTeX)
 
@@ -50,7 +54,7 @@ Invoke-WebRequest -Uri "https://yihui.org/tinytex/install-windows.bat" -OutFile 
 ```
 
 ### 2.3. Pandoc
-
+for conversion from file.jmd to file.pdf
 **macOS**
 ```bash
 brew install pandoc
@@ -62,7 +66,7 @@ sudo apt install pandoc
 ```
 
 **Windows**  
-Download from [pandoc.org](https://pandoc.org/installing.html)
+Follow the instructions provided by [pandoc.org](https://pandoc.org/installing.html)
 
 ### 2.4. Juleaf
 
@@ -70,7 +74,7 @@ Download from [pandoc.org](https://pandoc.org/installing.html)
 git clone https://github.com/bakimane/juleaf.git
 cd juleaf
 julia -e 'using Pkg; Pkg.add(["HTTP", "Weave"])'
-julia server.jl
+julia juleaf.jl
 ```
 
 Open http://localhost:8080

@@ -14,11 +14,11 @@
 
 ## 1. Features
 
-- 📝 Julia code execution in documents
-- 📐 LaTeX math rendering
-- 📄 PDF output (Research paper, Presentation slide, Letters)
-- ✨ AI assistant compatible (Groq, Claude, etc.)
-- 🌙 Dark mode
+- Julia code execution in documents
+- LaTeX math rendering
+- PDF output (Research paper, Presentation slide, Letters)
+- AI assistant compatible (Groq, Claude, etc.)
+- Dark mode
 
 ## 2. Install
 ### 2.1. Julia
@@ -104,7 +104,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## 6. AI (Optional)
 
 1. Get free key at [console.groq.com](https://console.groq.com)
-2. Click ✨ AI → paste key
+2. Click  AI → paste key
 
 ## 7. License
 

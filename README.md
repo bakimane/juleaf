@@ -69,11 +69,25 @@ sudo apt install pandoc
 Follow the instructions provided by [pandoc.org](https://pandoc.org/installing.html)
 
 ### 2.4. Juleaf
-
 ```bash
 git clone https://github.com/bakimane/juleaf.git
 cd juleaf
+```
+
+**Install Julia packages:**
+
+For Bash/Git Bash/Linux/macOS:
+```bash
 julia -e 'using Pkg; Pkg.add(["HTTP", "Weave"])'
+```
+
+For Windows PowerShell:
+```powershell
+julia -e "using Pkg; Pkg.add([`"HTTP`", `"Weave`"])"
+```
+
+**Start the server:**
+```bash
 julia juleaf.jl
 ```
 
